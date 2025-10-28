@@ -7,6 +7,7 @@ import (
 	"unsafe"
 
 	"github.com/ebitengine/oto/v3"
+	"github.com/cjbrigato/go-vtm/tracker"
 )
 
 // AudioPlayback handles real-time audio output
@@ -19,7 +20,7 @@ type AudioPlayback struct {
 }
 
 // NewAudioPlayback creates a new audio playback system
-func NewAudioPlayback(module *TrackerModule, sampleRate int) (*AudioPlayback, error) {
+func NewAudioPlayback(module *tracker.TrackerModule, sampleRate int) (*AudioPlayback, error) {
 	// Initialize oto context
 	op := &oto.NewContextOptions{
 		SampleRate:   sampleRate,

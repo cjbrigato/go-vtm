@@ -2,11 +2,12 @@ package audio
 
 import (
 	"github.com/cjbrigato/go-vtm/synth"
+	"github.com/cjbrigato/go-vtm/tracker"
 )
 
 // Player plays tracker modules
 type Player struct {
-	module         *TrackerModule
+	module         *tracker.TrackerModule
 	voices         []*synth.Voice
 	sampleRate     float64
 	currentPos     int // Position in sequence
@@ -17,7 +18,7 @@ type Player struct {
 }
 
 // NewPlayer creates a new tracker player
-func NewPlayer(module *TrackerModule, sampleRate float64) *Player {
+func NewPlayer(module *tracker.TrackerModule, sampleRate float64) *Player {
 	// Calculate samples per row based on tempo
 	// tempo = beats per minute
 	// 1 beat = 4 rows (typically)

@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/cjbrigato/go-vtm/audio"
+	"github.com/cjbrigato/go-vtm"
 )
 
 func main() {
@@ -17,11 +17,13 @@ func main() {
 	flag.Parse()
 
 	// Load the music module
-	module, err := audio.LoadVTM(*musicFile)
+	player, err := vtm.NewVTMPlayer(*musicFile, vtm.DefaultSampleRate)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error loading music: %v\n", err)
 		os.Exit(1)
 	}
+
+	module := player.Module()
 
 	fmt.Printf("Loaded: %s\n", module.Title)
 	fmt.Printf("Tempo: %d BPM\n", module.Tempo)
@@ -59,18 +61,8 @@ func main() {
 	fmt.Println("Run with -music <file.vtm> to load different tracks")
 
 	// Load and start music if specified
-	var audioPlayback *audio.AudioPlayback
-	if *musicFile != "" {
-		fmt.Printf("Loaded music: %s (%d BPM)\n", module.Title, module.Tempo)
-		audioPlayback, err = audio.NewAudioPlayback(module, 44100)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Warning: Could not initialize audio: %v\n", err)
-			audioPlayback = nil
-		} else {
-			audioPlayback.Play()
-			defer audioPlayback.Stop()
-		}
-	}
+	player.Play()
+	defer player.Stop()
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
@@ -78,14 +70,14 @@ func main() {
 	go func() {
 		<-sigChan
 		fmt.Printf("Signal received, stopping music\n")
-		audioPlayback.Stop()
+		player.Stop()
 	}()
 
 	fmt.Printf("Music playing...\n")
 
 	for {
 
-		if audioPlayback != nil && !audioPlayback.IsDone() {
+		if !player.IsDone() {
 			time.Sleep(100 * time.Millisecond)
 		} else {
 			break
@@ -93,7 +85,7 @@ func main() {
 
 	}
 	fmt.Printf("Music stopped\n")
-	runtime.KeepAlive(audioPlayback)
+	runtime.KeepAlive(player)
 
 }
 
