@@ -196,7 +196,8 @@ func LoadVTM(filename string) (*TrackerModule, error) {
 
 					if voiceNum == 0 {
 						// Voice 0 is the main note
-						if parsedNote.Note >= -2 {
+						// Accept: notes (>=0), note-off (-2), sustain (-3), rest (-1)
+						if parsedNote.Note >= -3 {
 							existingNote.Note = parsedNote.Note
 							if parsedNote.Volume > 0 {
 								existingNote.Volume = parsedNote.Volume
@@ -210,7 +211,8 @@ func LoadVTM(filename string) (*TrackerModule, error) {
 								existingNote.Chord[j] = -1 // Initialize to rest
 							}
 						}
-						if parsedNote.Note >= -2 && voiceNum-1 < len(existingNote.Chord) {
+						// Accept: notes (>=0), note-off (-2), sustain (-3), rest (-1)
+						if parsedNote.Note >= -3 && voiceNum-1 < len(existingNote.Chord) {
 							existingNote.Chord[voiceNum-1] = parsedNote.Note
 						}
 					}

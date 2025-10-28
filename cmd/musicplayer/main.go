@@ -25,40 +25,38 @@ func main() {
 
 	module := player.Module()
 
-	fmt.Printf("Loaded: %s\n", module.Title)
-	fmt.Printf("Tempo: %d BPM\n", module.Tempo)
-	fmt.Printf("Instruments: %d\n", len(module.Instruments))
-	fmt.Printf("Patterns: %d\n", len(module.Patterns))
-	fmt.Printf("Sequence length: %d\n", len(module.Sequence))
-	fmt.Println("\nInstruments:")
+	// Display module information
+	fmt.Printf("\n🎵 %s\n", module.Title)
+	fmt.Printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
+	fmt.Printf("Tempo:     %d BPM\n", module.Tempo)
+	fmt.Printf("Patterns:  %d\n", len(module.Patterns))
+	fmt.Printf("Sequence:  %d steps\n", len(module.Sequence))
+
+	// Show instruments
+	fmt.Printf("\n📻 Instruments:\n")
 	for i, inst := range module.Instruments {
-		fmt.Printf("  %d: %s (%v) ADSR: %.3f/%.3f/%.3f/%.3f\n",
-			i, inst.Name, inst.WaveType, inst.Attack, inst.Decay, inst.Sustain, inst.Release)
-	}
-
-	fmt.Println("\nSequence:")
-	fmt.Printf("  %v\n", module.Sequence)
-
-	fmt.Println("\nPattern preview (first pattern):")
-	if len(module.Patterns) > 0 {
-		pat := module.Patterns[0]
-		fmt.Printf("  Rows: %d, Channels: %d\n", pat.Rows, len(pat.Channels))
-		for row := 0; row < pat.Rows && row < 8; row++ {
-			fmt.Printf("  %02d:", row)
-			for ch := 0; ch < len(pat.Channels); ch++ {
-				note := pat.Channels[ch][row]
-				if note.Note >= 0 {
-					fmt.Printf(" %s", formatNote(note.Note))
-				} else {
-					fmt.Printf(" ---")
-				}
-			}
-			fmt.Println()
+		if inst.IsFM {
+			fmt.Printf("  [%d] %s - FM Synthesis (%s)\n", i, inst.Name, inst.FMPreset)
+		} else {
+			fmt.Printf("  [%d] %s - %v (ADSR: %.2f/%.2f/%.2f/%.2f)\n",
+				i, inst.Name, inst.WaveType, inst.Attack, inst.Decay, inst.Sustain, inst.Release)
 		}
 	}
 
-	fmt.Println("\nMusic engine loaded successfully!")
-	fmt.Println("Run with -music <file.vtm> to load different tracks")
+	// Calculate approximate duration
+	totalRows := 0
+	for _, patIdx := range module.Sequence {
+		if patIdx < len(module.Patterns) {
+			totalRows += module.Patterns[patIdx].Rows
+		}
+	}
+	secondsPerRow := 60.0 / float64(module.Tempo) / 4.0
+	durationSeconds := float64(totalRows) * secondsPerRow
+	minutes := int(durationSeconds / 60)
+	seconds := int(durationSeconds) % 60
+
+	fmt.Printf("\n⏱️  Duration:  ~%d:%02d\n", minutes, seconds)
+	fmt.Printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
 
 	// Load and start music if specified
 	player.Play()
@@ -77,17 +75,32 @@ func main() {
 		player.Stop()
 	}()
 
-	fmt.Printf("Music playing...\n")
+	fmt.Printf("\n▶️  Playing... (Press Ctrl+C to stop)\n\n")
+
+	// Progress indicator
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop()
+
+	startTime := time.Now()
 
 	for {
-
-		if !player.IsDone() && player.IsPlaying() {
-			time.Sleep(100 * time.Millisecond)
-			continue
+		select {
+		case <-ticker.C:
+			if player.IsPlaying() && !player.IsDone() {
+				elapsed := time.Since(startTime)
+				fmt.Printf("\r⏱️  %02d:%02d ", int(elapsed.Minutes()), int(elapsed.Seconds())%60)
+			}
+		default:
+			if !player.IsDone() && player.IsPlaying() {
+				time.Sleep(50 * time.Millisecond)
+				continue
+			}
+			// Done
+			elapsed := time.Since(startTime)
+			fmt.Printf("\r✅ Finished - %02d:%02d                    \n", int(elapsed.Minutes()), int(elapsed.Seconds())%60)
+			return
 		}
-		break
 	}
-	fmt.Printf("Music stopped\n")
 	runtime.KeepAlive(player)
 }
 
