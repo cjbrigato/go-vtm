@@ -1,0 +1,130 @@
+# VESAsterizer Tracker Module
+# Pachelbel's Canon in D Major
+# Showcasing multi-voice piano with selective sustain (sostenuto pedal effect)
+TITLE Canon in D
+TEMPO 80
+
+# Piano only - pure classical beauty
+FMINSTRUMENT Piano PIANO
+
+# Pattern 0: Introduction - Bass line establishes
+PATTERN 16 1
+CH 0:
+V0: D-2 ... A-2 ... B-2 ... F#2 ... G-2 ... D-2 ... G-2 ... A-2 ...
+V1: --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+V2: --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+V3: --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+ENDPATTERN
+
+# Pattern 1: First voice enters (soprano)
+PATTERN 16 1
+CH 0:
+V0: D-2 ... A-2 ... B-2 ... F#2 ... G-2 ... D-2 ... G-2 ... A-2 ...
+V1: F#5 E-5 D-5 C#5 B-4 A-4 B-4 C#5 D-5 C#5 B-4 A-4 G-4 F#4 G-4 E-4
+V2: --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+V3: --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+ENDPATTERN
+
+# Pattern 2: Second voice enters (alto) - Canon begins!
+PATTERN 16 1
+CH 0:
+V0: D-2 ... A-2 ... B-2 ... F#2 ... G-2 ... D-2 ... G-2 ... A-2 ...
+V1: F#5 E-5 D-5 C#5 B-4 A-4 B-4 C#5 D-5 C#5 B-4 A-4 G-4 F#4 G-4 E-4
+V2: --- --- F#4 E-4 D-4 C#4 B-3 A-3 B-3 C#4 D-4 C#4 B-3 A-3 G-3 F#3
+V3: --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+ENDPATTERN
+
+# Pattern 3: All voices active - Full canon
+PATTERN 16 1
+CH 0:
+V0: D-2 ... A-2 ... B-2 ... F#2 ... G-2 ... D-2 ... G-2 ... A-2 ...
+V1: F#5 E-5 D-5 C#5 B-4 A-4 B-4 C#5 D-5 C#5 B-4 A-4 G-4 F#4 G-4 E-4
+V2: D-5 C#5 B-4 A-4 G-4 F#4 G-4 A-4 B-4 A-4 G-4 F#4 E-4 D-4 E-4 C#4
+V3: --- --- F#4 E-4 D-4 C#4 B-3 A-3 B-3 C#4 D-4 C#4 B-3 A-3 G-3 F#3
+ENDPATTERN
+
+# Pattern 4: Variation 1 - Eighth notes
+PATTERN 16 1
+CH 0:
+V0: D-2 ... A-2 ... B-2 ... F#2 ... G-2 ... D-2 ... G-2 ... A-2 ...
+V1: D-5 F#5 A-5 G-5 F#5 D-5 E-5 C#5 D-5 B-4 B-4 C#5 D-5 A-4 B-4 G-4
+V2: F#4 A-4 D-5 E-5 D-5 A-4 C#5 A-4 B-4 G-4 G-4 A-4 B-4 F#4 G-4 E-4
+V3: D-4 --- A-4 --- B-4 --- F#4 --- G-4 --- D-4 --- G-4 --- A-4 ---
+ENDPATTERN
+
+# Pattern 5: Variation 2 - Running sixteenths (simulated with eighths)
+PATTERN 16 1
+CH 0:
+V0: D-2 ... A-2 ... B-2 ... F#2 ... G-2 ... D-2 ... G-2 ... A-2 ...
+V1: F#5 G-5 A-5 B-5 A-5 G-5 F#5 E-5 D-5 E-5 F#5 G-5 F#5 E-5 D-5 C#5
+V2: D-5 E-5 F#5 G-5 F#5 E-5 D-5 C#5 B-4 C#5 D-5 E-5 D-5 C#5 B-4 A-4
+V3: A-4 --- D-5 --- F#5 --- C#5 --- B-4 --- D-5 --- B-4 --- E-5 ---
+ENDPATTERN
+
+# Pattern 6: Harmonic texture - Sustained chords with melody
+PATTERN 16 1
+CH 0:
+V0: D-2 ... ... ... ... ... ... ... === --- --- --- --- --- --- ---
+V1: D-5 ... ... ... ... ... ... ... === --- --- --- --- --- --- ---
+V2: F#4 ... ... ... ... ... ... ... === --- --- --- --- --- --- ---
+V3: A-4 ... ... ... ... ... ... ... === --- --- --- --- --- --- ---
+ENDPATTERN
+
+# Pattern 7: Build to climax - All voices moving
+PATTERN 16 1
+CH 0:
+V0: D-2 ... A-2 ... B-2 ... F#2 ... G-2 ... D-2 ... G-2 ... A-2 ...
+V1: A-5 G-5 F#5 E-5 D-5 E-5 F#5 G-5 A-5 B-5 C#6 D-6 E-6 F#6 G-6 A-6
+V2: F#5 E-5 D-5 C#5 B-4 C#5 D-5 E-5 F#5 G-5 A-5 B-5 C#6 D-6 E-6 F#6
+V3: D-5 C#5 B-4 A-4 G-4 A-4 B-4 C#5 D-5 E-5 F#5 G-5 A-5 B-5 C#6 D-6
+ENDPATTERN
+
+# Pattern 8: Sostenuto effect - V1 sustains while others change
+PATTERN 16 1
+CH 0:
+V0: D-2 ... A-2 ... B-2 ... F#2 ... G-2 ... D-2 ... G-2 ... A-2 ...
+V1: D-6 ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
+V2: F#4 E-4 D-4 C#4 B-3 A-3 B-3 C#4 D-4 C#4 B-3 A-3 G-3 F#3 G-3 E-3
+V3: A-3 G-3 F#3 E-3 D-3 ... ... ... G-3 ... ... ... === --- --- ---
+ENDPATTERN
+
+# Pattern 9: Middle pedal effect - V2 held, others move
+PATTERN 16 1
+CH 0:
+V0: D-2 ... A-2 ... B-2 ... F#2 ... G-2 ... D-2 ... G-2 ... A-2 ...
+V1: F#5 E-5 D-5 C#5 B-4 A-4 B-4 C#5 === --- --- --- --- --- --- ---
+V2: B-4 ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
+V3: D-4 E-4 F#4 G-4 A-4 B-4 C#5 D-5 E-5 D-5 C#5 B-4 A-4 G-4 F#4 E-4
+ENDPATTERN
+
+# Pattern 10: Selective release - Each voice ends at different times
+PATTERN 16 1
+CH 0:
+V0: D-2 ... A-2 ... B-2 ... F#2 ... === --- --- --- --- --- --- ---
+V1: A-5 ... ... ... ... ... ... ... ... ... ... ... === --- --- ---
+V2: D-5 ... ... ... ... ... ... ... ... ... === --- --- --- --- ---
+V3: F#4 ... ... ... === --- --- --- --- --- --- --- --- --- --- ---
+ENDPATTERN
+
+# Pattern 11: Gradual fade with staggered releases
+PATTERN 24 1
+CH 0:
+V0: D-2 ... ... ... ... ... === --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+V1: D-6 ... ... ... ... ... ... ... === --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+V2: F#5 ... ... ... ... ... ... ... ... ... === --- --- --- --- --- --- --- --- --- --- --- --- ---
+V3: A-5 ... ... ... ... ... ... ... ... ... ... ... === --- --- --- --- --- --- --- --- --- --- ---
+ENDPATTERN
+
+# Pattern 12: Final chord - All voices together
+PATTERN 32 1
+CH 0:
+V0: D-2 ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ---
+V1: D-6 ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ---
+V2: F#5 ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ---
+V3: A-5 ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ---
+ENDPATTERN
+
+# Sequence - The complete Canon
+# Introduction → Canon entries → Variations → Climax → Fade → Resolution
+SEQUENCE 0 1 2 3 3 4 5 3 6 7 8 9 10 11 12
+

@@ -141,20 +141,24 @@ func (p *Player) processRow() {
 					velocity = 1.0 // Default velocity if not specified
 				}
 
-				// Trigger main note
-				p.VoiceAllocators[ch].NoteOn(note.Note, velocity)
+				// Trigger main note on voice 0
+				p.VoiceAllocators[ch].SetVoiceNote(0, note.Note, velocity)
 
-				// If this is a chord, trigger additional notes
+				// If this is a chord, trigger additional notes on specific voices
 				if note.Chord != nil && len(note.Chord) > 0 {
-					for _, chordNote := range note.Chord {
+					for voiceIdx, chordNote := range note.Chord {
 						if chordNote >= 0 {
-							p.VoiceAllocators[ch].NoteOn(chordNote, velocity)
+							// Trigger on voice 1, 2, 3
+							p.VoiceAllocators[ch].SetVoiceNote(voiceIdx+1, chordNote, velocity)
+						} else if chordNote == -2 {
+							// Note-off for this specific voice
+							p.VoiceAllocators[ch].ReleaseVoice(voiceIdx + 1)
 						}
 					}
 				}
 			} else if note.Note == -2 {
-				// Note off command - releases all notes on this channel
-				p.VoiceAllocators[ch].AllNotesOff()
+				// Note off command for voice 0
+				p.VoiceAllocators[ch].ReleaseVoice(0)
 			}
 			// -1 is rest, do nothing (notes continue to sustain)
 		}

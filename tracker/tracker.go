@@ -87,7 +87,7 @@ func LoadVTM(filename string) (*TrackerModule, error) {
 			continue
 		}
 
-		command := parts[0]
+		command := strings.TrimSuffix(parts[0], ":")
 
 		switch command {
 		case "TITLE":
@@ -152,21 +152,70 @@ func LoadVTM(filename string) (*TrackerModule, error) {
 			}
 
 		case "CH":
-			// CH 0: C-4 01 F ..
-			if currentPattern != nil && len(parts) >= 3 {
+			// CH 0: C-4 01 F .. (original format)
+			// CH 0: (multi-line voice format - just set channel)
+			if currentPattern != nil && len(parts) >= 2 {
 				// Remove colon from channel number
 				chanStr := strings.TrimSuffix(parts[1], ":")
 				currentChannel, _ = strconv.Atoi(chanStr)
-				// Parse notes after the channel specification
-				for i := 2; i < len(parts); i++ {
-					row := i - 2
+
+				// If there are notes on the same line (original format)
+				if len(parts) > 2 {
+					// Parse notes after the channel specification
+					for i := 2; i < len(parts); i++ {
+						row := i - 2
+						if row >= currentPattern.Rows {
+							break
+						}
+						note := parseTrackerNote(parts[i])
+						if currentChannel < len(currentPattern.Channels) {
+							currentPattern.Channels[currentChannel][row] = note
+						}
+					}
+				}
+			}
+
+		case "V0", "V1", "V2", "V3":
+			// Voice-specific line: V0: C-4 ... E-4 ===
+			// Parses notes for a specific voice within the current channel
+			if currentPattern != nil && currentChannel >= 0 && currentChannel < len(currentPattern.Channels) {
+				voiceNum := int(command[1] - '0') // Extract voice number from V0, V1, etc.
+
+				// Parse notes for this voice
+				for i := 1; i < len(parts); i++ {
+					row := i - 1
 					if row >= currentPattern.Rows {
 						break
 					}
-					note := parseTrackerNote(parts[i])
-					if currentChannel < len(currentPattern.Channels) {
-						currentPattern.Channels[currentChannel][row] = note
+
+					noteStr := parts[i]
+					existingNote := currentPattern.Channels[currentChannel][row]
+
+					// Parse the note for this voice
+					parsedNote := parseTrackerNote(noteStr)
+
+					if voiceNum == 0 {
+						// Voice 0 is the main note
+						if parsedNote.Note >= -2 {
+							existingNote.Note = parsedNote.Note
+							if parsedNote.Volume > 0 {
+								existingNote.Volume = parsedNote.Volume
+							}
+						}
+					} else {
+						// Voices 1-3 go in the Chord array
+						if existingNote.Chord == nil {
+							existingNote.Chord = make([]int, 3) // Need 3 for voices 1-3
+							for j := range existingNote.Chord {
+								existingNote.Chord[j] = -1 // Initialize to rest
+							}
+						}
+						if parsedNote.Note >= -2 && voiceNum-1 < len(existingNote.Chord) {
+							existingNote.Chord[voiceNum-1] = parsedNote.Note
+						}
 					}
+
+					currentPattern.Channels[currentChannel][row] = existingNote
 				}
 			}
 
