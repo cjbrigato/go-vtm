@@ -7,14 +7,14 @@ import (
 
 // Player plays tracker modules
 type Player struct {
-	module         *tracker.TrackerModule
-	voices         []*synth.Voice
-	sampleRate     float64
-	currentPos     int // Position in sequence
-	currentRow     int // Current row in pattern
-	sampleCounter  int // Sample counter for row timing
-	samplesPerRow  int // Samples before advancing to next row
-	done           bool
+	module        *tracker.TrackerModule
+	voices        []*synth.Voice
+	sampleRate    float64
+	currentPos    int // Position in sequence
+	currentRow    int // Current row in pattern
+	sampleCounter int // Sample counter for row timing
+	samplesPerRow int // Samples before advancing to next row
+	done          bool
 }
 
 // NewPlayer creates a new tracker player

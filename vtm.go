@@ -99,3 +99,7 @@ func (p *VTMPlayer) Stop() {
 func (p *VTMPlayer) IsDone() bool {
 	return p.audioPlayback.IsDone()
 }
+
+func (p *VTMPlayer) IsPlaying() bool {
+	return p.audioPlayback.IsPlaying()
+}

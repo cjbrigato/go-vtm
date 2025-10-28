@@ -65,6 +65,10 @@ func (ap *AudioPlayback) Stop() {
 	close(ap.done)
 }
 
+func (ap *AudioPlayback) IsPlaying() bool {
+	return ap.audioPlayer.IsPlaying()
+}
+
 // IsDone returns true if the music has finished
 func (ap *AudioPlayback) IsDone() bool {
 	return ap.player.IsDone()

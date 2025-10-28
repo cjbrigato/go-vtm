@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	musicFile := flag.String("music", "music/demo1.vtm", "Path to VTM music file")
+	musicFile := flag.String("music", "music/raster-madness.vtm", "Path to VTM music file")
 	flag.Parse()
 
 	// Load the music module
@@ -77,16 +77,14 @@ func main() {
 
 	for {
 
-		if !player.IsDone() {
+		if !player.IsDone() && player.IsPlaying() {
 			time.Sleep(100 * time.Millisecond)
-		} else {
-			break
+			continue
 		}
-
+		break
 	}
 	fmt.Printf("Music stopped\n")
 	runtime.KeepAlive(player)
-
 }
 
 func formatNote(note int) string {
