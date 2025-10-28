@@ -173,24 +173,24 @@ func (fm *FMInstrument) IsActive() bool {
 func NewPianoFMInstrument(sampleRate float64) *FMInstrument {
 	fm := NewFMInstrument(4, FM4OpPiano, sampleRate)
 	
-	// Operator 1: Carrier - fundamental frequency
+	// Operator 1: Carrier - fundamental frequency with SUSTAIN
 	fm.SetOperatorRatio(0, 1.0)
-	fm.SetOperatorEnvelope(0, 0.001, 0.3, 0.0, 0.2) // Fast attack, medium decay, no sustain
+	fm.SetOperatorEnvelope(0, 0.002, 0.15, 0.7, 0.8) // Fast attack, quick decay, HIGH sustain, long release
 	fm.SetOperatorLevel(0, 1.0)
 	
-	// Operator 2: Modulator - adds brightness
+	// Operator 2: Modulator - adds brightness (sustains for warmth)
 	fm.SetOperatorRatio(1, 2.0) // One octave up
-	fm.SetOperatorEnvelope(1, 0.001, 0.15, 0.0, 0.1) // Shorter envelope for brightness
+	fm.SetOperatorEnvelope(1, 0.001, 0.1, 0.45, 0.5) // Some sustain for warmth
 	fm.SetOperatorLevel(1, 0.7)
 	
-	// Operator 3: Modulator - adds harmonic complexity
+	// Operator 3: Modulator - adds harmonic complexity (decays faster)
 	fm.SetOperatorRatio(2, 3.5) // Slightly inharmonic
-	fm.SetOperatorEnvelope(2, 0.001, 0.2, 0.0, 0.15)
+	fm.SetOperatorEnvelope(2, 0.001, 0.12, 0.25, 0.3) // Less sustain, gives percussive attack
 	fm.SetOperatorLevel(2, 0.5)
 	
-	// Operator 4: Modulator - adds attack transient
+	// Operator 4: Modulator - adds attack transient (very short)
 	fm.SetOperatorRatio(3, 5.0) // High harmonic
-	fm.SetOperatorEnvelope(3, 0.0005, 0.05, 0.0, 0.05) // Very fast envelope
+	fm.SetOperatorEnvelope(3, 0.0005, 0.05, 0.0, 0.05) // Very fast envelope (unchanged - transient only)
 	fm.SetOperatorLevel(3, 0.4)
 	
 	// Moderate modulation index for piano-like timbre
