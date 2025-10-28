@@ -76,13 +76,25 @@ func (fm *FMInstrument) SetModulationIndex(index float64) {
 }
 
 // NoteOn triggers all operators with the given frequency
+// Velocity affects both volume AND modulation index (brightness)
 func (fm *FMInstrument) NoteOn(note int, velocity float64) {
 	fm.baseFrequency = NoteToFrequency(note)
 	fm.volume = velocity
 	
+	// Velocity affects brightness: higher velocity = more modulation
+	// Scale modulation index by velocity (0.5 to 1.5 range)
+	velocityModulation := 0.5 + velocity
+	
 	// Set frequency for all operators based on their ratios
-	for _, op := range fm.operators {
+	for i, op := range fm.operators {
 		op.SetFrequency(fm.baseFrequency)
+		
+		// Velocity affects modulator output levels more than carrier
+		if i > 0 { // Modulators
+			originalLevel := op.outputLevel
+			op.SetOutputLevel(originalLevel * velocityModulation)
+		}
+		
 		op.Trigger()
 	}
 }
@@ -272,21 +284,21 @@ func NewFMBrassFMInstrument(sampleRate float64) *FMInstrument {
 	return fm
 }
 
-// NewFMBellFMInstrument creates a metallic bell preset
+// NewFMBellFMInstrument creates a warm, musical bell preset
 func NewFMBellFMInstrument(sampleRate float64) *FMInstrument {
 	fm := NewFMInstrument(2, FM2OpSimple, sampleRate)
 	
-	// Operator 1: Carrier
+	// Operator 1: Carrier - warm fundamental
 	fm.SetOperatorRatio(0, 1.0)
-	fm.SetOperatorEnvelope(0, 0.001, 0.5, 0.2, 0.4)
+	fm.SetOperatorEnvelope(0, 0.002, 0.6, 0.3, 0.5) // Longer, more musical
 	fm.SetOperatorLevel(0, 1.0)
 	
-	// Operator 2: Modulator - inharmonic for metallic sound
-	fm.SetOperatorRatio(1, 11.0) // High, inharmonic ratio
-	fm.SetOperatorEnvelope(1, 0.001, 0.3, 0.0, 0.3)
-	fm.SetOperatorLevel(1, 0.9)
+	// Operator 2: Modulator - musical harmonic (not too inharmonic)
+	fm.SetOperatorRatio(1, 3.5) // Lower ratio for warmth
+	fm.SetOperatorEnvelope(1, 0.001, 0.4, 0.2, 0.4)
+	fm.SetOperatorLevel(1, 0.7) // Reduced for less harshness
 	
-	fm.SetModulationIndex(4.0)
+	fm.SetModulationIndex(2.0) // Lower for warmth
 	
 	return fm
 }

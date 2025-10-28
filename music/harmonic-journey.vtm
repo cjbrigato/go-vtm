@@ -1,0 +1,80 @@
+# VESAsterizer Tracker Module
+# Harmonic Journey - Showcasing Polyphony, Sustain & Velocity
+TITLE Harmonic Journey
+TEMPO 120
+
+# FM Instruments with good sustain
+FMINSTRUMENT Piano PIANO
+FMINSTRUMENT EPiano EPIANO
+FMINSTRUMENT Pad BRASS
+INSTRUMENT Bass SAW 0.010 0.150 0.800 0.300
+
+# Pattern 0: Intro - Simple sustained chord
+PATTERN 8 1
+CH 0: C-4 ... ... ... E-4 ... ... ...
+ENDPATTERN
+
+# Pattern 1: Add harmony - Multiple notes sustaining together
+PATTERN 8 1
+CH 0: C-4 E-4 G-4 ... ... ... ... ===
+ENDPATTERN
+
+# Pattern 2: Piano chords with sustain and release
+PATTERN 16 2
+CH 0: C-4 E-4 G-4 C-5 --- --- --- === E-4 G-4 B-4 E-5 --- --- --- ===
+CH 1: C-2 ... ... ... C-2 ... ... ... E-2 ... ... ... E-2 ... ... ...
+ENDPATTERN
+
+# Pattern 3: Electric piano with velocity variations (using different octaves to simulate)
+PATTERN 16 2
+CH 0: C-5 ... E-5 ... G-5 ... C-6 ... === --- --- --- --- --- --- ---
+CH 1: --- E-4 ... G-4 ... C-5 ... E-5 ... === --- --- --- --- --- ---
+ENDPATTERN
+
+# Pattern 4: Full harmony - 4 note chord
+PATTERN 8 4
+CH 0: C-4 ... ... ... ... ... ... ===
+CH 1: E-4 ... ... ... ... ... ... ===
+CH 2: G-4 ... ... ... ... ... ... ===
+CH 3: C-5 ... ... ... ... ... ... ===
+ENDPATTERN
+
+# Pattern 5: Pad with sustained notes
+PATTERN 16 3
+CH 0: C-4 ... ... ... ... ... ... ... D-4 ... ... ... ... ... ... ===
+CH 1: E-4 ... ... ... ... ... ... ... F-4 ... ... ... ... ... ... ===
+CH 2: G-4 ... ... ... ... ... ... ... A-4 ... ... ... ... ... ... ===
+ENDPATTERN
+
+# Pattern 6: Piano melody over sustained chord
+PATTERN 16 4
+CH 0: C-5 D-5 E-5 F-5 G-5 A-5 G-5 F-5 E-5 D-5 C-5 ... ... ... ... ---
+CH 1: C-4 ... ... ... ... ... ... ... === --- --- --- --- --- --- ---
+CH 2: E-4 ... ... ... ... ... ... ... === --- --- --- --- --- --- ---
+CH 3: G-4 ... ... ... ... ... ... ... === --- --- --- --- --- --- ---
+ENDPATTERN
+
+# Pattern 7: Complex harmony with staggered releases
+PATTERN 24 4
+CH 0: C-4 ... ... ... ... ... ... === E-4 ... ... ... ... ... ... === G-4 ... ... ... ... ... ... ===
+CH 1: --- E-4 ... ... ... ... ... ... === G-4 ... ... ... ... ... ... === C-5 ... ... ... ... ... ---
+CH 2: --- --- G-4 ... ... ... ... ... ... === C-5 ... ... ... ... ... ... === E-5 ... ... ... ... ---
+CH 3: C-2 ... ... ... ... ... C-2 ... ... ... E-2 ... ... ... ... ... E-2 ... ... ... G-2 ... ... ...
+ENDPATTERN
+
+# Pattern 8: Arpeggiated chords (notes sustain while new ones are added)
+PATTERN 16 1
+CH 0: C-4 ... E-4 ... G-4 ... C-5 ... === --- E-5 ... G-5 ... === ---
+ENDPATTERN
+
+# Pattern 9: Final sustained chord with all voices
+PATTERN 32 4
+CH 0: C-5 ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ===
+CH 1: E-5 ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ===
+CH 2: G-5 ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ===
+CH 3: C-6 ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ===
+ENDPATTERN
+
+# Sequence - Showcase the progression
+SEQUENCE 0 1 2 3 4 5 6 7 8 9
+

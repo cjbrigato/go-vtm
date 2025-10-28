@@ -7,14 +7,15 @@ import (
 
 // Player plays tracker modules
 type Player struct {
-	module        *tracker.TrackerModule
-	voices        []*synth.Voice
-	sampleRate    float64
-	currentPos    int // Position in sequence
-	currentRow    int // Current row in pattern
-	sampleCounter int // Sample counter for row timing
-	samplesPerRow int // Samples before advancing to next row
-	done          bool
+	module          *tracker.TrackerModule
+	VoiceAllocators []*VoiceAllocator // One allocator per channel for polyphony - PUBLIC for direct access
+	sampleRate      float64
+	currentPos      int // Position in sequence
+	currentRow      int // Current row in pattern
+	sampleCounter   int // Sample counter for row timing
+	samplesPerRow   int // Samples before advancing to next row
+	done            bool
+	maxPolyphony    int // Max simultaneous notes per channel
 }
 
 // NewPlayer creates a new tracker player
@@ -28,55 +29,44 @@ func NewPlayer(module *tracker.TrackerModule, sampleRate float64) *Player {
 	secondsPerRow := secondsPerBeat / 4.0 // 4 rows per beat
 	samplesPerRow := int(secondsPerRow * samplesPerSecond)
 
-	// Create voices (max 8 channels)
+	// Create voice allocators (max 8 channels, 4 voices per channel for polyphony)
 	numChannels := 8
-	voices := make([]*synth.Voice, numChannels)
-	for i := range voices {
-		voices[i] = synth.NewVoice(synth.Square, sampleRate)
+	maxPolyphony := 4 // Allow up to 4 simultaneous notes per channel
+
+	voiceAllocators := make([]*VoiceAllocator, numChannels)
+
+	// Create default instrument if none provided
+	defaultInst := tracker.Instrument{
+		Name:     "Default",
+		WaveType: synth.Square,
+		Attack:   0.01,
+		Decay:    0.1,
+		Sustain:  0.6,
+		Release:  0.2,
+		IsFM:     false,
 	}
 
-	// Configure instruments
-	for i, inst := range module.Instruments {
-		if i < len(voices) {
-			if inst.IsFM {
-				// Create FM instrument based on preset
-				var fmInst *synth.FMInstrument
-				switch inst.FMPreset {
-				case "PIANO":
-					fmInst = synth.NewPianoFMInstrument(sampleRate)
-				case "EPIANO":
-					fmInst = synth.NewElectricPianoFMInstrument(sampleRate)
-				case "BASS":
-					fmInst = synth.NewFMBassFMInstrument(sampleRate)
-				case "LEAD":
-					fmInst = synth.NewFMLeadFMInstrument(sampleRate)
-				case "BRASS":
-					fmInst = synth.NewFMBrassFMInstrument(sampleRate)
-				case "BELL":
-					fmInst = synth.NewFMBellFMInstrument(sampleRate)
-				case "ARP":
-					fmInst = synth.NewFMArpFMInstrument(sampleRate)
-				default:
-					// Default to lead if unknown preset
-					fmInst = synth.NewFMLeadFMInstrument(sampleRate)
-				}
-				voices[i].SetFMInstrument(fmInst)
-			} else {
-				// Traditional instrument
-				voices[i].SetInstrument(inst.WaveType, inst.Attack, inst.Decay, inst.Sustain, inst.Release)
-			}
+	// Configure voice allocators with instruments
+	for i := range voiceAllocators {
+		var inst *tracker.Instrument
+		if i < len(module.Instruments) {
+			inst = &module.Instruments[i]
+		} else {
+			inst = &defaultInst
 		}
+		voiceAllocators[i] = NewVoiceAllocator(inst, sampleRate, maxPolyphony)
 	}
 
 	return &Player{
-		module:        module,
-		voices:        voices,
-		sampleRate:    sampleRate,
-		currentPos:    0,
-		currentRow:    0,
-		sampleCounter: 0,
-		samplesPerRow: samplesPerRow,
-		done:          false,
+		module:          module,
+		VoiceAllocators: voiceAllocators,
+		sampleRate:      sampleRate,
+		currentPos:      0,
+		currentRow:      0,
+		sampleCounter:   0,
+		samplesPerRow:   samplesPerRow,
+		done:            false,
+		maxPolyphony:    maxPolyphony,
 	}
 }
 
@@ -91,14 +81,14 @@ func (p *Player) Next() float64 {
 		p.processRow()
 	}
 
-	// Generate audio by mixing all voices
+	// Generate audio by mixing all channels
 	var sample float64
-	for _, voice := range p.voices {
-		sample += voice.Next()
+	for _, allocator := range p.VoiceAllocators {
+		sample += allocator.Next()
 	}
 
 	// Simple mixing (average)
-	sample /= float64(len(p.voices))
+	sample /= float64(len(p.VoiceAllocators))
 
 	// Advance sample counter
 	p.sampleCounter++
@@ -140,20 +130,43 @@ func (p *Player) processRow() {
 	pattern := p.module.Patterns[patternIdx]
 
 	// Process each channel
-	for ch := 0; ch < len(pattern.Channels) && ch < len(p.voices); ch++ {
+	for ch := 0; ch < len(pattern.Channels) && ch < len(p.VoiceAllocators); ch++ {
 		if p.currentRow < len(pattern.Channels[ch]) {
 			note := pattern.Channels[ch][p.currentRow]
 
 			if note.Note >= 0 {
-				// Trigger note
-				p.voices[ch].NoteOn(note.Note, note.Volume)
+				// Trigger note with proper velocity
+				velocity := note.Volume
+				if velocity == 0 {
+					velocity = 1.0 // Default velocity if not specified
+				}
+				p.VoiceAllocators[ch].NoteOn(note.Note, velocity)
 			} else if note.Note == -2 {
-				// Note off command (not used in current parser, but could be)
-				p.voices[ch].NoteOff()
+				// Note off command - releases all notes on this channel
+				p.VoiceAllocators[ch].AllNotesOff()
 			}
-			// -1 is rest, do nothing
+			// -1 is rest, do nothing (notes continue to sustain)
 		}
 	}
+}
+
+// GetChannelVoices returns the voice allocator for a specific channel
+// Convenience method for accessing channel harmonies
+func (p *Player) GetChannelVoices(channel int) *VoiceAllocator {
+	if channel >= 0 && channel < len(p.VoiceAllocators) {
+		return p.VoiceAllocators[channel]
+	}
+	return nil
+}
+
+// GetChannelCount returns the number of channels
+func (p *Player) GetChannelCount() int {
+	return len(p.VoiceAllocators)
+}
+
+// GetMaxPolyphony returns the max voices per channel
+func (p *Player) GetMaxPolyphony() int {
+	return p.maxPolyphony
 }
 
 // IsDone returns true if playback is complete

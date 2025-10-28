@@ -204,9 +204,14 @@ func parseWaveType(s string) synth.WaveType {
 }
 
 func parseTrackerNote(s string) TrackerNote {
-	// Format: "C-4" or "---" for rest
+	// Format: "C-4" or "---" for rest or "===" for note-off
 	if s == "---" || s == ".." || s == "..." {
 		return TrackerNote{Note: -1, Instrument: 0, Volume: 1.0}
+	}
+
+	// Note-off command
+	if s == "===" || s == "OFF" || s == "off" {
+		return TrackerNote{Note: -2, Instrument: 0, Volume: 1.0}
 	}
 
 	note := TrackerNote{
