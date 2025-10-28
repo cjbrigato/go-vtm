@@ -62,7 +62,11 @@ func main() {
 
 	// Load and start music if specified
 	player.Play()
-	defer player.Stop()
+	defer func() {
+		if player.IsPlaying() {
+			player.Stop()
+		}
+	}()
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
