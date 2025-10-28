@@ -1,0 +1,71 @@
+# VESAsterizer Tracker Module
+# Chord Notation Demo - New inline harmony format!
+TITLE Chord Notation Demo
+TEMPO 120
+
+# FM Instruments
+FMINSTRUMENT Piano PIANO
+FMINSTRUMENT EPiano EPIANO
+FMINSTRUMENT Pad BRASS
+INSTRUMENT Bass SAW 0.010 0.150 0.800 0.300
+
+# Pattern 0: Simple chords - Easy to read!
+PATTERN 8 2
+CH 0: [C-4+E-4+G-4] ... ... ... [D-4+F-4+A-4] ... ... ===
+CH 1: C-2 ... C-2 ... D-2 ... D-2 ...
+ENDPATTERN
+
+# Pattern 1: Chord progressions
+PATTERN 16 2
+CH 0: [C-4+E-4+G-4] ... ... === [G-3+B-3+D-4] ... ... === [A-3+C-4+E-4] ... ... === [F-3+A-3+C-4] ... ... ===
+CH 1: C-2 ... ... ... G-2 ... ... ... A-2 ... ... ... F-2 ... ... ...
+ENDPATTERN
+
+# Pattern 2: Jazz voicings (7th chords)
+PATTERN 16 1
+CH 0: [C-4+E-4+G-4+B-4] ... ... === [D-4+F#4+A-4+C-5] ... ... === [G-3+B-3+D-4+F-4] ... ... === [C-4+E-4+G-4+B-4] ... ... ===
+ENDPATTERN
+
+# Pattern 3: Melody over sustained chord
+PATTERN 16 2
+CH 0: C-5 D-5 E-5 F-5 G-5 A-5 G-5 F-5 E-5 D-5 C-5 ... ... ... ... ---
+CH 1: [C-3+E-3+G-3] ... ... ... ... ... ... ... ... ... ... ... ... ... ... ===
+ENDPATTERN
+
+# Pattern 4: Chord arpeggiation (notes build up)
+PATTERN 16 1
+CH 0: C-4 ... E-4 ... G-4 ... C-5 ... === --- [C-4+E-4+G-4+C-5] ... ... ... ... ===
+ENDPATTERN
+
+# Pattern 5: Complex harmony - Multiple chords per row
+PATTERN 8 3
+CH 0: [C-4+E-4+G-4] ... ... ===
+CH 1: [E-3+G-3] ... ... ===
+CH 2: C-2 ... C-2 ===
+ENDPATTERN
+
+# Pattern 6: Electric piano chords
+PATTERN 16 2
+CH 0: [C-5+E-5+G-5] ... === --- [D-5+F-5+A-5] ... === --- [E-5+G-5+B-5] ... === --- [C-5+E-5+G-5] ... === ---
+CH 1: C-2 ... ... ... D-2 ... ... ... E-2 ... ... ... C-2 ... ... ...
+ENDPATTERN
+
+# Pattern 7: Pad with rich harmonies
+PATTERN 24 1
+CH 0: [C-4+E-4+G-4+B-4+D-5] ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ===
+ENDPATTERN
+
+# Pattern 8: Bass + Piano chords
+PATTERN 16 2
+CH 0: [C-4+E-4+G-4] --- --- --- [F-4+A-4+C-5] --- --- --- [G-4+B-4+D-5] --- --- --- [C-4+E-4+G-4] --- --- ---
+CH 1: C-2 C-2 C-3 C-2 F-2 F-2 F-3 F-2 G-2 G-2 G-3 G-2 C-2 C-2 C-3 C-2
+ENDPATTERN
+
+# Pattern 9: Mixed single notes and chords
+PATTERN 16 1
+CH 0: C-4 E-4 [G-4+B-4] [C-5+E-5] G-4 E-4 C-4 --- [C-4+E-4+G-4+C-5] ... ... ... ... ... ... ===
+ENDPATTERN
+
+# Sequence - Showcase all patterns
+SEQUENCE 0 1 2 3 4 5 6 7 8 9
+

@@ -10,12 +10,13 @@ import (
 	"github.com/cjbrigato/go-vtm/synth"
 )
 
-// TrackerNote represents a single note in a pattern
+// TrackerNote represents a note (or chord) in a pattern
 type TrackerNote struct {
-	Note       int     // MIDI note number (-1 for rest)
+	Note       int     // MIDI note number (-1 for rest, -2 for note-off)
 	Instrument int     // Instrument number
 	Volume     float64 // 0.0 to 1.0
 	Effect     string  // Effect command
+	Chord      []int   // Additional notes for harmony (nil if single note)
 }
 
 // Pattern represents a pattern of notes across channels
@@ -205,6 +206,7 @@ func parseWaveType(s string) synth.WaveType {
 
 func parseTrackerNote(s string) TrackerNote {
 	// Format: "C-4" or "---" for rest or "===" for note-off
+	// Format: "[C-4+E-4+G-4]" for chords (multiple notes)
 	if s == "---" || s == ".." || s == "..." {
 		return TrackerNote{Note: -1, Instrument: 0, Volume: 1.0}
 	}
@@ -214,6 +216,37 @@ func parseTrackerNote(s string) TrackerNote {
 		return TrackerNote{Note: -2, Instrument: 0, Volume: 1.0}
 	}
 
+	// Check for chord notation: [note1+note2+note3]
+	if len(s) > 2 && s[0] == '[' && s[len(s)-1] == ']' {
+		// Parse chord
+		chordStr := s[1 : len(s)-1] // Remove brackets
+		notes := strings.Split(chordStr, "+")
+
+		if len(notes) == 0 {
+			return TrackerNote{Note: -1, Instrument: 0, Volume: 1.0}
+		}
+
+		// First note is the main note
+		mainNote := synth.ParseNote(notes[0])
+
+		// Additional notes go in Chord array
+		var chord []int
+		if len(notes) > 1 {
+			chord = make([]int, len(notes)-1)
+			for i := 1; i < len(notes); i++ {
+				chord[i-1] = synth.ParseNote(notes[i])
+			}
+		}
+
+		return TrackerNote{
+			Note:       mainNote,
+			Instrument: 0,
+			Volume:     1.0,
+			Chord:      chord,
+		}
+	}
+
+	// Single note
 	note := TrackerNote{
 		Note:       synth.ParseNote(s),
 		Instrument: 0,

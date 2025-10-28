@@ -140,7 +140,18 @@ func (p *Player) processRow() {
 				if velocity == 0 {
 					velocity = 1.0 // Default velocity if not specified
 				}
+
+				// Trigger main note
 				p.VoiceAllocators[ch].NoteOn(note.Note, velocity)
+
+				// If this is a chord, trigger additional notes
+				if note.Chord != nil && len(note.Chord) > 0 {
+					for _, chordNote := range note.Chord {
+						if chordNote >= 0 {
+							p.VoiceAllocators[ch].NoteOn(chordNote, velocity)
+						}
+					}
+				}
 			} else if note.Note == -2 {
 				// Note off command - releases all notes on this channel
 				p.VoiceAllocators[ch].AllNotesOff()
