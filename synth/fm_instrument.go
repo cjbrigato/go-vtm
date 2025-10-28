@@ -91,8 +91,8 @@ func (fm *FMInstrument) NoteOn(note int, velocity float64) {
 		
 		// Velocity affects modulator output levels more than carrier
 		if i > 0 { // Modulators
-			originalLevel := op.outputLevel
-			op.SetOutputLevel(originalLevel * velocityModulation)
+			// Use base level, not current level (prevents accumulation)
+			op.outputLevel = op.baseOutputLevel * velocityModulation
 		}
 		
 		op.Trigger()

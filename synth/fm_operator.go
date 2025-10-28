@@ -5,22 +5,24 @@ import "math"
 // FMOperator represents an FM synthesis operator
 // An operator is an oscillator with its own envelope that can modulate other operators
 type FMOperator struct {
-	phase      float64
-	frequency  float64
-	sampleRate float64
-	envelope   *Envelope
-	outputLevel float64 // Operator output volume (0.0 to 1.0)
-	ratio      float64  // Frequency ratio (e.g., 1.0 = fundamental, 2.0 = octave up)
+	phase          float64
+	frequency      float64
+	sampleRate     float64
+	envelope       *Envelope
+	outputLevel    float64 // Current output volume (may be modulated by velocity)
+	baseOutputLevel float64 // Base output level (for velocity modulation)
+	ratio          float64  // Frequency ratio (e.g., 1.0 = fundamental, 2.0 = octave up)
 }
 
 // NewFMOperator creates a new FM operator
 func NewFMOperator(sampleRate float64) *FMOperator {
 	return &FMOperator{
-		phase:       0.0,
-		sampleRate:  sampleRate,
-		envelope:    NewEnvelope(0.01, 0.1, 0.6, 0.2, sampleRate),
-		outputLevel: 1.0,
-		ratio:       1.0,
+		phase:           0.0,
+		sampleRate:      sampleRate,
+		envelope:        NewEnvelope(0.01, 0.1, 0.6, 0.2, sampleRate),
+		outputLevel:     1.0,
+		baseOutputLevel: 1.0,
+		ratio:           1.0,
 	}
 }
 
@@ -34,8 +36,9 @@ func (op *FMOperator) SetRatio(ratio float64) {
 	op.ratio = ratio
 }
 
-// SetOutputLevel sets the operator's output level
+// SetOutputLevel sets the operator's base output level
 func (op *FMOperator) SetOutputLevel(level float64) {
+	op.baseOutputLevel = level
 	op.outputLevel = level
 }
 
