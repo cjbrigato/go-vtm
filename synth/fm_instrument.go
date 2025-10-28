@@ -205,3 +205,108 @@ func NewElectricPianoFMInstrument(sampleRate float64) *FMInstrument {
 	return fm
 }
 
+// NewFMBassFMInstrument creates a powerful FM bass preset
+func NewFMBassFMInstrument(sampleRate float64) *FMInstrument {
+	fm := NewFMInstrument(3, FM3OpStack, sampleRate)
+	
+	// Operator 1: Carrier - sub bass fundamental
+	fm.SetOperatorRatio(0, 1.0)
+	fm.SetOperatorEnvelope(0, 0.001, 0.2, 0.7, 0.15)
+	fm.SetOperatorLevel(0, 1.0)
+	
+	// Operator 2: Modulator - adds growl
+	fm.SetOperatorRatio(1, 2.01) // Slightly detuned for fatness
+	fm.SetOperatorEnvelope(1, 0.001, 0.15, 0.5, 0.1)
+	fm.SetOperatorLevel(1, 0.9)
+	
+	// Operator 3: Modulator - attack bite
+	fm.SetOperatorRatio(2, 4.0)
+	fm.SetOperatorEnvelope(2, 0.0005, 0.08, 0.2, 0.05)
+	fm.SetOperatorLevel(2, 0.7)
+	
+	fm.SetModulationIndex(3.5) // High modulation for aggressive bass
+	
+	return fm
+}
+
+// NewFMLeadFMInstrument creates a cutting lead synth preset
+func NewFMLeadFMInstrument(sampleRate float64) *FMInstrument {
+	fm := NewFMInstrument(2, FM2OpSimple, sampleRate)
+	
+	// Operator 1: Carrier
+	fm.SetOperatorRatio(0, 1.0)
+	fm.SetOperatorEnvelope(0, 0.005, 0.1, 0.8, 0.15)
+	fm.SetOperatorLevel(0, 1.0)
+	
+	// Operator 2: Modulator - bright harmonics
+	fm.SetOperatorRatio(1, 3.0) // Perfect fifth harmonic
+	fm.SetOperatorEnvelope(1, 0.002, 0.08, 0.6, 0.1)
+	fm.SetOperatorLevel(1, 1.0)
+	
+	fm.SetModulationIndex(5.0) // Very high for cutting lead
+	
+	return fm
+}
+
+// NewFMBrassFMInstrument creates a brass-like preset
+func NewFMBrassFMInstrument(sampleRate float64) *FMInstrument {
+	fm := NewFMInstrument(3, FM3OpStack, sampleRate)
+	
+	// Operator 1: Carrier
+	fm.SetOperatorRatio(0, 1.0)
+	fm.SetOperatorEnvelope(0, 0.02, 0.15, 0.7, 0.2)
+	fm.SetOperatorLevel(0, 1.0)
+	
+	// Operator 2: Modulator - brass harmonics
+	fm.SetOperatorRatio(1, 1.5) // Fifth
+	fm.SetOperatorEnvelope(1, 0.015, 0.12, 0.6, 0.15)
+	fm.SetOperatorLevel(1, 0.8)
+	
+	// Operator 3: Modulator - brightness
+	fm.SetOperatorRatio(2, 3.0)
+	fm.SetOperatorEnvelope(2, 0.01, 0.1, 0.5, 0.12)
+	fm.SetOperatorLevel(2, 0.6)
+	
+	fm.SetModulationIndex(2.0)
+	
+	return fm
+}
+
+// NewFMBellFMInstrument creates a metallic bell preset
+func NewFMBellFMInstrument(sampleRate float64) *FMInstrument {
+	fm := NewFMInstrument(2, FM2OpSimple, sampleRate)
+	
+	// Operator 1: Carrier
+	fm.SetOperatorRatio(0, 1.0)
+	fm.SetOperatorEnvelope(0, 0.001, 0.5, 0.2, 0.4)
+	fm.SetOperatorLevel(0, 1.0)
+	
+	// Operator 2: Modulator - inharmonic for metallic sound
+	fm.SetOperatorRatio(1, 11.0) // High, inharmonic ratio
+	fm.SetOperatorEnvelope(1, 0.001, 0.3, 0.0, 0.3)
+	fm.SetOperatorLevel(1, 0.9)
+	
+	fm.SetModulationIndex(4.0)
+	
+	return fm
+}
+
+// NewFMArpFMInstrument creates a fast arpeggio/chiptune preset
+func NewFMArpFMInstrument(sampleRate float64) *FMInstrument {
+	fm := NewFMInstrument(2, FM2OpSimple, sampleRate)
+	
+	// Operator 1: Carrier
+	fm.SetOperatorRatio(0, 1.0)
+	fm.SetOperatorEnvelope(0, 0.001, 0.05, 0.3, 0.05)
+	fm.SetOperatorLevel(0, 1.0)
+	
+	// Operator 2: Modulator - chippy harmonics
+	fm.SetOperatorRatio(1, 2.0)
+	fm.SetOperatorEnvelope(1, 0.001, 0.03, 0.1, 0.03)
+	fm.SetOperatorLevel(1, 0.85)
+	
+	fm.SetModulationIndex(2.5) // Medium-high for chip sound
+	
+	return fm
+}
+

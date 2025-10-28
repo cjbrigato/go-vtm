@@ -46,9 +46,19 @@ func NewPlayer(module *tracker.TrackerModule, sampleRate float64) *Player {
 					fmInst = synth.NewPianoFMInstrument(sampleRate)
 				case "EPIANO":
 					fmInst = synth.NewElectricPianoFMInstrument(sampleRate)
+				case "BASS":
+					fmInst = synth.NewFMBassFMInstrument(sampleRate)
+				case "LEAD":
+					fmInst = synth.NewFMLeadFMInstrument(sampleRate)
+				case "BRASS":
+					fmInst = synth.NewFMBrassFMInstrument(sampleRate)
+				case "BELL":
+					fmInst = synth.NewFMBellFMInstrument(sampleRate)
+				case "ARP":
+					fmInst = synth.NewFMArpFMInstrument(sampleRate)
 				default:
-					// Default to piano if unknown preset
-					fmInst = synth.NewPianoFMInstrument(sampleRate)
+					// Default to lead if unknown preset
+					fmInst = synth.NewFMLeadFMInstrument(sampleRate)
 				}
 				voices[i].SetFMInstrument(fmInst)
 			} else {
