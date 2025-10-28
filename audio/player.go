@@ -38,7 +38,23 @@ func NewPlayer(module *tracker.TrackerModule, sampleRate float64) *Player {
 	// Configure instruments
 	for i, inst := range module.Instruments {
 		if i < len(voices) {
-			voices[i].SetInstrument(inst.WaveType, inst.Attack, inst.Decay, inst.Sustain, inst.Release)
+			if inst.IsFM {
+				// Create FM instrument based on preset
+				var fmInst *synth.FMInstrument
+				switch inst.FMPreset {
+				case "PIANO":
+					fmInst = synth.NewPianoFMInstrument(sampleRate)
+				case "EPIANO":
+					fmInst = synth.NewElectricPianoFMInstrument(sampleRate)
+				default:
+					// Default to piano if unknown preset
+					fmInst = synth.NewPianoFMInstrument(sampleRate)
+				}
+				voices[i].SetFMInstrument(fmInst)
+			} else {
+				// Traditional instrument
+				voices[i].SetInstrument(inst.WaveType, inst.Attack, inst.Decay, inst.Sustain, inst.Release)
+			}
 		}
 	}
 

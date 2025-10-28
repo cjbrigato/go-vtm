@@ -26,12 +26,21 @@ type Pattern struct {
 
 // Instrument defines synthesis parameters
 type Instrument struct {
-	Name     string
+	Name string
+
+	// Traditional synthesis
 	WaveType synth.WaveType
 	Attack   float64
 	Decay    float64
 	Sustain  float64
 	Release  float64
+
+	// FM synthesis
+	IsFM        bool
+	FMPreset    string // "PIANO", "EPIANO", "CUSTOM"
+	FMAlgorithm synth.FMAlgorithm
+	// For custom FM instruments, we'll store parameters as strings and parse them
+	FMParams map[string]string
 }
 
 // TrackerModule represents a complete tracker module
@@ -95,11 +104,32 @@ func LoadVTM(filename string) (*TrackerModule, error) {
 				inst := Instrument{
 					Name:     parts[1],
 					WaveType: parseWaveType(parts[2]),
+					IsFM:     false,
 				}
 				inst.Attack, _ = strconv.ParseFloat(parts[3], 64)
 				inst.Decay, _ = strconv.ParseFloat(parts[4], 64)
 				inst.Sustain, _ = strconv.ParseFloat(parts[5], 64)
 				inst.Release, _ = strconv.ParseFloat(parts[6], 64)
+				module.Instruments = append(module.Instruments, inst)
+			}
+
+		case "FMINSTRUMENT":
+			// FMINSTRUMENT Name Preset
+			// Where Preset can be: PIANO, EPIANO, or CUSTOM (future extension)
+			if len(parts) >= 3 {
+				inst := Instrument{
+					Name:     parts[1],
+					IsFM:     true,
+					FMPreset: strings.ToUpper(parts[2]),
+					FMParams: make(map[string]string),
+				}
+				// Parse any additional parameters after the preset name
+				for i := 3; i < len(parts); i++ {
+					param := parts[i]
+					if kv := strings.Split(param, "="); len(kv) == 2 {
+						inst.FMParams[kv[0]] = kv[1]
+					}
+				}
 				module.Instruments = append(module.Instruments, inst)
 			}
 
@@ -202,10 +232,21 @@ func SaveVTM(filename string, module *TrackerModule) error {
 
 	// Write instruments
 	for _, inst := range module.Instruments {
-		fmt.Fprintf(file, "INSTRUMENT %s %s %.3f %.3f %.3f %.3f\n",
-			inst.Name,
-			waveTypeToString(inst.WaveType),
-			inst.Attack, inst.Decay, inst.Sustain, inst.Release)
+		if inst.IsFM {
+			fmt.Fprintf(file, "FMINSTRUMENT %s %s",
+				inst.Name,
+				inst.FMPreset)
+			// Write any custom parameters
+			for k, v := range inst.FMParams {
+				fmt.Fprintf(file, " %s=%s", k, v)
+			}
+			fmt.Fprintf(file, "\n")
+		} else {
+			fmt.Fprintf(file, "INSTRUMENT %s %s %.3f %.3f %.3f %.3f\n",
+				inst.Name,
+				waveTypeToString(inst.WaveType),
+				inst.Attack, inst.Decay, inst.Sustain, inst.Release)
+		}
 	}
 	fmt.Fprintf(file, "\n")
 
