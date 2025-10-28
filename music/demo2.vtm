@@ -1,0 +1,37 @@
+# VESAsterizer Tracker Module
+# Demo Track 2: "Raster Madness"
+TITLE Raster Madness
+TEMPO 160
+
+# Instruments
+INSTRUMENT Lead SAW 0.005 0.080 0.500 0.150
+INSTRUMENT Bass SQUARE 0.001 0.120 0.800 0.100
+INSTRUMENT Melody TRIANGLE 0.010 0.060 0.600 0.180
+INSTRUMENT Kick SINE 0.001 0.100 0.200 0.100
+
+# Pattern 0: Fast arpeggio
+PATTERN 16 4
+CH 0: A-3 C-4 E-4 A-4 C-4 E-4 A-4 C-5 E-4 A-4 C-5 E-5 A-4 C-5 E-5 A-5
+CH 1: A-1 ... ... ... A-1 ... ... ... A-1 ... ... ... A-1 ... ... A-2
+CH 2: --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+CH 3: A-2 ... ... ... A-2 ... ... ... A-2 ... ... ... A-2 ... ... ...
+ENDPATTERN
+
+# Pattern 1: Melody line
+PATTERN 16 4
+CH 0: A-4 ... B-4 ... C-5 ... D-5 ... E-5 D-5 C-5 B-4 A-4 ... ... ---
+CH 1: A-1 --- ... --- E-2 --- ... --- A-1 --- ... --- E-2 --- A-2 ---
+CH 2: C-5 ... D-5 ... E-5 ... F-5 ... G-5 F-5 E-5 D-5 C-5 ... ... ---
+CH 3: ... --- ... --- ... --- ... --- ... --- ... --- ... --- ... ---
+ENDPATTERN
+
+# Pattern 2: Heavy bass
+PATTERN 16 4
+CH 0: A-3 --- A-3 --- E-3 --- E-3 --- D-3 --- D-3 --- E-3 --- E-3 ---
+CH 1: A-1 A-1 A-1 A-1 E-1 E-1 E-1 E-1 D-1 D-1 D-1 D-1 E-1 E-1 E-1 E-1
+CH 2: --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+CH 3: A-2 ... A-2 ... E-2 ... E-2 ... D-2 ... D-2 ... E-2 ... E-2 ...
+ENDPATTERN
+
+# Sequence
+SEQUENCE 0 0 1 2 0 1 1 0
