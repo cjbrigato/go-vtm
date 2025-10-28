@@ -256,8 +256,15 @@ func parseWaveType(s string) synth.WaveType {
 func parseTrackerNote(s string) TrackerNote {
 	// Format: "C-4" or "---" for rest or "===" for note-off
 	// Format: "[C-4+E-4+G-4]" for chords (multiple notes)
-	if s == "---" || s == ".." || s == "..." {
+	// Format: "..." or ".." means SUSTAIN (keep previous note playing, no retrigger)
+	if s == "---" {
 		return TrackerNote{Note: -1, Instrument: 0, Volume: 1.0}
+	}
+
+	// Sustain notation - don't retrigger, just let note continue
+	// This is different from rest! Rest = -1, Sustain = -3
+	if s == "..." || s == ".." {
+		return TrackerNote{Note: -3, Instrument: 0, Volume: 1.0}
 	}
 
 	// Note-off command

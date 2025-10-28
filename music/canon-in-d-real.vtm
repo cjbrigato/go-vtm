@@ -1,0 +1,201 @@
+# Pachelbel's Canon in D Major - The REAL One
+# Based on the original composition structure
+# Ground bass repeats: D - A - Bm - F#m - G - D - G - A
+TITLE Canon in D (Pachelbel)
+TEMPO 120
+
+FMINSTRUMENT Piano PIANO
+
+# Pattern 0: Ground Bass only (introduction)
+# The famous repeating bass line
+PATTERN 8 1
+CH 0:
+V0: D-2 ... A-2 ... B-2 ... F#2 ...
+V1: --- --- --- --- --- --- --- ---
+V2: --- --- --- --- --- --- --- ---
+V3: --- --- --- --- --- --- --- ---
+ENDPATTERN
+
+# Pattern 1: Ground Bass continues
+PATTERN 8 1
+CH 0:
+V0: G-2 ... D-2 ... G-2 ... A-2 ...
+V1: --- --- --- --- --- --- --- ---
+V2: --- --- --- --- --- --- --- ---
+V3: --- --- --- --- --- --- --- ---
+ENDPATTERN
+
+# Pattern 2: First voice enters (Canon Voice 1)
+# The iconic melody line
+PATTERN 8 1
+CH 0:
+V0: D-2 ... A-2 ... B-2 ... F#2 ...
+V1: F#4 ... E-4 ... D-4 ... C#4 ...
+V2: --- --- --- --- --- --- --- ---
+V3: --- --- --- --- --- --- --- ---
+ENDPATTERN
+
+# Pattern 3: Voice 1 continues, bass continues
+PATTERN 8 1
+CH 0:
+V0: G-2 ... D-2 ... G-2 ... A-2 ...
+V1: B-3 ... A-3 ... B-3 ... C#4 ...
+V2: --- --- --- --- --- --- --- ---
+V3: --- --- --- --- --- --- --- ---
+ENDPATTERN
+
+# Pattern 4: Second voice enters (Canon Voice 2) - Now it's a canon!
+# Voice 2 starts the same melody while Voice 1 continues
+PATTERN 8 1
+CH 0:
+V0: D-2 ... A-2 ... B-2 ... F#2 ...
+V1: D-4 ... C#4 ... B-3 ... A-3 ...
+V2: F#3 ... E-3 ... D-3 ... C#3 ...
+V3: --- --- --- --- --- --- --- ---
+ENDPATTERN
+
+# Pattern 5: Two voices in canon
+PATTERN 8 1
+CH 0:
+V0: G-2 ... D-2 ... G-2 ... A-2 ...
+V1: G-3 ... F#3 ... G-3 ... E-3 ...
+V2: B-2 ... A-2 ... B-2 ... C#3 ...
+V3: --- --- --- --- --- --- --- ---
+ENDPATTERN
+
+# Pattern 6: Third voice enters (Canon Voice 3) - Full 3-voice canon!
+PATTERN 8 1
+CH 0:
+V0: D-2 ... A-2 ... B-2 ... F#2 ...
+V1: F#4 ... E-4 ... D-4 ... C#4 ...
+V2: D-3 ... C#3 ... B-2 ... A-2 ...
+V3: F#2 ... E-2 ... D-2 ... C#2 ...
+ENDPATTERN
+
+# Pattern 7: Three voices in canon
+PATTERN 8 1
+CH 0:
+V0: G-2 ... D-2 ... G-2 ... A-2 ...
+V1: B-3 ... A-3 ... B-3 ... C#4 ...
+V2: G-2 ... F#2 ... G-2 ... E-2 ...
+V3: B-1 ... A-1 ... B-1 ... C#2 ...
+ENDPATTERN
+
+# Pattern 8: Variation 1 - Eighth notes begin (first variation)
+# The melody gets more intricate with faster notes
+PATTERN 8 1
+CH 0:
+V0: D-2 ... A-2 ... B-2 ... F#2 ...
+V1: D-4 E-4 F#4 G-4 F#4 E-4 F#4 D-4
+V2: F#3 G-3 A-3 B-3 A-3 G-3 A-3 F#3
+V3: D-3 ... A-3 ... B-3 ... F#3 ...
+ENDPATTERN
+
+# Pattern 9: Variation 1 continues
+PATTERN 8 1
+CH 0:
+V0: G-2 ... D-2 ... G-2 ... A-2 ...
+V1: E-4 F#4 G-4 A-4 G-4 F#4 E-4 F#4
+V2: B-3 C#4 D-4 E-4 D-4 C#4 B-3 C#4
+V3: G-3 ... D-3 ... G-3 ... A-3 ...
+ENDPATTERN
+
+# Pattern 10: Variation 2 - Sixteenth notes (faster runs)
+PATTERN 8 1
+CH 0:
+V0: D-2 ... A-2 ... B-2 ... F#2 ...
+V1: D-4 E-4 F#4 E-4 D-4 E-4 F#4 G-4
+V2: F#3 G-3 A-3 G-3 F#3 G-3 A-3 B-3
+V3: D-3 ... C#3 ... B-2 ... A-2 ...
+ENDPATTERN
+
+# Pattern 11: Variation 2 continues
+PATTERN 8 1
+CH 0:
+V0: G-2 ... D-2 ... G-2 ... A-2 ...
+V1: A-4 G-4 F#4 E-4 D-4 E-4 F#4 G-4
+V2: C#4 B-3 A-3 G-3 F#3 G-3 A-3 B-3
+V3: G-2 ... F#2 ... G-2 ... E-2 ...
+ENDPATTERN
+
+# Pattern 12: Variation 3 - More elaborate runs
+PATTERN 8 1
+CH 0:
+V0: D-2 ... A-2 ... B-2 ... F#2 ...
+V1: F#4 G-4 A-4 B-4 A-4 B-4 C#5 D-5
+V2: D-4 E-4 F#4 G-4 F#4 G-4 A-4 B-4
+V3: F#3 ... E-3 ... D-3 ... C#3 ...
+ENDPATTERN
+
+# Pattern 13: Variation 3 continues
+PATTERN 8 1
+CH 0:
+V0: G-2 ... D-2 ... G-2 ... A-2 ...
+V1: E-5 D-5 C#5 B-4 A-4 G-4 A-4 E-4
+V2: C#4 B-3 A-3 G-3 F#3 E-3 F#3 C#3
+V3: B-2 ... A-2 ... B-2 ... C#3 ...
+ENDPATTERN
+
+# Pattern 14: Climax - Full harmony with sustained notes
+# All voices playing rich chords
+PATTERN 8 1
+CH 0:
+V0: D-2 ... ... ... ... ... ... ...
+V1: D-5 ... ... ... ... ... ... ...
+V2: A-4 ... ... ... ... ... ... ...
+V3: F#4 ... ... ... ... ... ... ...
+ENDPATTERN
+
+# Pattern 15: Climax chord 2
+PATTERN 8 1
+CH 0:
+V0: A-2 ... ... ... ... ... ... ...
+V1: C#5 ... ... ... ... ... ... ...
+V2: E-4 ... ... ... ... ... ... ...
+V3: A-3 ... ... ... ... ... ... ...
+ENDPATTERN
+
+# Pattern 16: Climax chord 3
+PATTERN 8 1
+CH 0:
+V0: B-2 ... ... ... ... ... ... ...
+V1: D-5 ... ... ... ... ... ... ...
+V2: F#4 ... ... ... ... ... ... ...
+V3: B-3 ... ... ... ... ... ... ...
+ENDPATTERN
+
+# Pattern 17: Climax chord 4
+PATTERN 8 1
+CH 0:
+V0: F#2 ... ... ... ... ... ... ...
+V1: C#5 ... ... ... ... ... ... ...
+V2: A-4 ... ... ... ... ... ... ...
+V3: F#3 ... ... ... ... ... ... ...
+ENDPATTERN
+
+# Pattern 18: Return to theme - All voices play the main melody together
+# Building towards the finale
+PATTERN 8 1
+CH 0:
+V0: G-2 ... D-2 ... G-2 ... A-2 ...
+V1: B-4 ... A-4 ... B-4 ... C#5 ...
+V2: G-3 ... F#3 ... G-3 ... E-3 ...
+V3: G-2 ... D-2 ... G-2 ... A-2 ...
+ENDPATTERN
+
+# Pattern 19: Final resolution - The piece slows and resolves
+# Sustained D major chord to end
+PATTERN 16 1
+CH 0:
+V0: D-2 ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
+V1: D-5 ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
+V2: A-4 ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
+V3: F#4 ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
+ENDPATTERN
+
+# The complete sequence - Introduction → Canon entries → Variations → Climax → Resolution
+# Bass alone (2x) → Voice 1 enters (2x) → Voice 2 enters (2x) → Voice 3 enters (2x) →
+# Variation 1 (2x) → Variation 2 (2x) → Variation 3 (2x) → Climax chords (4x) → 
+# Return (1x) → Final resolution
+SEQUENCE 0 1 0 1 2 3 2 3 4 5 4 5 6 7 6 7 8 9 8 9 10 11 10 11 12 13 12 13 14 15 16 17 18 19
+

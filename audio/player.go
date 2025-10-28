@@ -164,6 +164,7 @@ func (p *Player) processRow() {
 								voice.NoteOff()
 							}
 						}
+						// -3 is sustain, do nothing (let note keep playing)
 					}
 				}
 			} else if note.Note == -2 {
@@ -173,7 +174,7 @@ func (p *Player) processRow() {
 					voice0.NoteOff()
 				}
 			}
-			// -1 is rest, do nothing (notes continue to sustain)
+			// -1 is rest (silence), -3 is sustain (continue playing previous note)
 		}
 	}
 }
