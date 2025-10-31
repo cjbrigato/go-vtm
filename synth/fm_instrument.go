@@ -7,15 +7,15 @@ const (
 	// FM2OpSimple: Op2 modulates Op1 (carrier)
 	// Op2 -> Op1 -> Out
 	FM2OpSimple FMAlgorithm = iota
-	
+
 	// FM2OpParallel: Both operators in parallel (additive)
 	// Op1 -> Out
 	// Op2 -> Out
 	FM2OpParallel
-	
+
 	// FM3OpStack: Op3 -> Op2 -> Op1 -> Out
 	FM3OpStack
-	
+
 	// FM4OpPiano: Classic piano algorithm
 	// Op4 -> Op3 \
 	//             Op1 -> Out
@@ -39,7 +39,7 @@ func NewFMInstrument(numOperators int, algorithm FMAlgorithm, sampleRate float64
 	for i := range operators {
 		operators[i] = NewFMOperator(sampleRate)
 	}
-	
+
 	return &FMInstrument{
 		operators:       operators,
 		algorithm:       algorithm,
@@ -80,21 +80,21 @@ func (fm *FMInstrument) SetModulationIndex(index float64) {
 func (fm *FMInstrument) NoteOn(note int, velocity float64) {
 	fm.baseFrequency = NoteToFrequency(note)
 	fm.volume = velocity
-	
+
 	// Velocity affects brightness: higher velocity = more modulation
 	// Scale modulation index by velocity (0.5 to 1.5 range)
 	velocityModulation := 0.5 + velocity
-	
+
 	// Set frequency for all operators based on their ratios
 	for i, op := range fm.operators {
 		op.SetFrequency(fm.baseFrequency)
-		
+
 		// Velocity affects modulator output levels more than carrier
 		if i > 0 { // Modulators
 			// Use base level, not current level (prevents accumulation)
 			op.outputLevel = op.baseOutputLevel * velocityModulation
 		}
-		
+
 		op.Trigger()
 	}
 }
@@ -111,9 +111,9 @@ func (fm *FMInstrument) Next() float64 {
 	if len(fm.operators) == 0 {
 		return 0.0
 	}
-	
+
 	var output float64
-	
+
 	switch fm.algorithm {
 	case FM2OpSimple:
 		// Op2 modulates Op1
@@ -122,13 +122,13 @@ func (fm *FMInstrument) Next() float64 {
 			carrier := fm.operators[0].Next(modulator)
 			output = carrier
 		}
-		
+
 	case FM2OpParallel:
 		// Both operators in parallel (additive)
 		if len(fm.operators) >= 2 {
 			output = (fm.operators[0].Next(0) + fm.operators[1].Next(0)) * 0.5
 		}
-		
+
 	case FM3OpStack:
 		// Op3 -> Op2 -> Op1
 		if len(fm.operators) >= 3 {
@@ -137,7 +137,7 @@ func (fm *FMInstrument) Next() float64 {
 			carrier := fm.operators[0].Next(mod1)
 			output = carrier
 		}
-		
+
 	case FM4OpPiano:
 		// Classic 4-operator piano algorithm
 		// Op4 -> Op3 -> Op1 (modulation chain 1)
@@ -146,16 +146,16 @@ func (fm *FMInstrument) Next() float64 {
 			// Chain 1: Op4 modulates Op3
 			mod4 := fm.operators[3].Next(0) * fm.modulationIndex * 0.5
 			mod3 := fm.operators[2].Next(mod4) * fm.modulationIndex
-			
+
 			// Chain 2: Op2 modulates Op1
 			mod2 := fm.operators[1].Next(0) * fm.modulationIndex * 0.3
-			
+
 			// Op1 is carrier, modulated by both chains
 			carrier := fm.operators[0].Next(mod3 + mod2)
 			output = carrier
 		}
 	}
-	
+
 	return output * fm.volume
 }
 
@@ -172,153 +172,152 @@ func (fm *FMInstrument) IsActive() bool {
 // NewPianoFMInstrument creates a preset FM instrument configured for piano sounds
 func NewPianoFMInstrument(sampleRate float64) *FMInstrument {
 	fm := NewFMInstrument(4, FM4OpPiano, sampleRate)
-	
+
 	// Operator 1: Carrier - fundamental frequency with SUSTAIN
 	fm.SetOperatorRatio(0, 1.0)
 	fm.SetOperatorEnvelope(0, 0.002, 0.15, 0.7, 0.8) // Fast attack, quick decay, HIGH sustain, long release
 	fm.SetOperatorLevel(0, 1.0)
-	
+
 	// Operator 2: Modulator - adds brightness (sustains for warmth)
-	fm.SetOperatorRatio(1, 2.0) // One octave up
+	fm.SetOperatorRatio(1, 2.0)                      // One octave up
 	fm.SetOperatorEnvelope(1, 0.001, 0.1, 0.45, 0.5) // Some sustain for warmth
 	fm.SetOperatorLevel(1, 0.7)
-	
+
 	// Operator 3: Modulator - adds harmonic complexity (decays faster)
-	fm.SetOperatorRatio(2, 3.5) // Slightly inharmonic
+	fm.SetOperatorRatio(2, 3.5)                       // Slightly inharmonic
 	fm.SetOperatorEnvelope(2, 0.001, 0.12, 0.25, 0.3) // Less sustain, gives percussive attack
 	fm.SetOperatorLevel(2, 0.5)
-	
+
 	// Operator 4: Modulator - adds attack transient (very short)
-	fm.SetOperatorRatio(3, 5.0) // High harmonic
+	fm.SetOperatorRatio(3, 5.0)                        // High harmonic
 	fm.SetOperatorEnvelope(3, 0.0005, 0.05, 0.0, 0.05) // Very fast envelope (unchanged - transient only)
 	fm.SetOperatorLevel(3, 0.4)
-	
+
 	// Moderate modulation index for piano-like timbre
 	fm.SetModulationIndex(1.5)
-	
+
 	return fm
 }
 
 // NewElectricPianoFMInstrument creates an electric piano preset
 func NewElectricPianoFMInstrument(sampleRate float64) *FMInstrument {
 	fm := NewFMInstrument(2, FM2OpSimple, sampleRate)
-	
+
 	// Classic DX7 E.Piano algorithm
 	fm.SetOperatorRatio(0, 1.0)
 	fm.SetOperatorEnvelope(0, 0.002, 0.4, 0.3, 0.3)
 	fm.SetOperatorLevel(0, 1.0)
-	
+
 	fm.SetOperatorRatio(1, 14.0) // High ratio for bell-like tone
 	fm.SetOperatorEnvelope(1, 0.001, 0.2, 0.0, 0.2)
 	fm.SetOperatorLevel(1, 0.8)
-	
+
 	fm.SetModulationIndex(3.0) // Higher modulation for brightness
-	
+
 	return fm
 }
 
 // NewFMBassFMInstrument creates a powerful FM bass preset
 func NewFMBassFMInstrument(sampleRate float64) *FMInstrument {
 	fm := NewFMInstrument(3, FM3OpStack, sampleRate)
-	
+
 	// Operator 1: Carrier - sub bass fundamental
 	fm.SetOperatorRatio(0, 1.0)
 	fm.SetOperatorEnvelope(0, 0.001, 0.2, 0.7, 0.15)
 	fm.SetOperatorLevel(0, 1.0)
-	
+
 	// Operator 2: Modulator - adds growl
 	fm.SetOperatorRatio(1, 2.01) // Slightly detuned for fatness
 	fm.SetOperatorEnvelope(1, 0.001, 0.15, 0.5, 0.1)
 	fm.SetOperatorLevel(1, 0.9)
-	
+
 	// Operator 3: Modulator - attack bite
 	fm.SetOperatorRatio(2, 4.0)
 	fm.SetOperatorEnvelope(2, 0.0005, 0.08, 0.2, 0.05)
 	fm.SetOperatorLevel(2, 0.7)
-	
+
 	fm.SetModulationIndex(3.5) // High modulation for aggressive bass
-	
+
 	return fm
 }
 
 // NewFMLeadFMInstrument creates a cutting lead synth preset
 func NewFMLeadFMInstrument(sampleRate float64) *FMInstrument {
 	fm := NewFMInstrument(2, FM2OpSimple, sampleRate)
-	
+
 	// Operator 1: Carrier
 	fm.SetOperatorRatio(0, 1.0)
 	fm.SetOperatorEnvelope(0, 0.005, 0.1, 0.8, 0.15)
 	fm.SetOperatorLevel(0, 1.0)
-	
+
 	// Operator 2: Modulator - bright harmonics
 	fm.SetOperatorRatio(1, 3.0) // Perfect fifth harmonic
 	fm.SetOperatorEnvelope(1, 0.002, 0.08, 0.6, 0.1)
 	fm.SetOperatorLevel(1, 1.0)
-	
+
 	fm.SetModulationIndex(5.0) // Very high for cutting lead
-	
+
 	return fm
 }
 
 // NewFMBrassFMInstrument creates a brass-like preset
 func NewFMBrassFMInstrument(sampleRate float64) *FMInstrument {
 	fm := NewFMInstrument(3, FM3OpStack, sampleRate)
-	
+
 	// Operator 1: Carrier
 	fm.SetOperatorRatio(0, 1.0)
 	fm.SetOperatorEnvelope(0, 0.02, 0.15, 0.7, 0.2)
 	fm.SetOperatorLevel(0, 1.0)
-	
+
 	// Operator 2: Modulator - brass harmonics
 	fm.SetOperatorRatio(1, 1.5) // Fifth
 	fm.SetOperatorEnvelope(1, 0.015, 0.12, 0.6, 0.15)
 	fm.SetOperatorLevel(1, 0.8)
-	
+
 	// Operator 3: Modulator - brightness
 	fm.SetOperatorRatio(2, 3.0)
 	fm.SetOperatorEnvelope(2, 0.01, 0.1, 0.5, 0.12)
 	fm.SetOperatorLevel(2, 0.6)
-	
+
 	fm.SetModulationIndex(2.0)
-	
+
 	return fm
 }
 
 // NewFMBellFMInstrument creates a warm, musical bell preset
 func NewFMBellFMInstrument(sampleRate float64) *FMInstrument {
 	fm := NewFMInstrument(2, FM2OpSimple, sampleRate)
-	
+
 	// Operator 1: Carrier - warm fundamental
 	fm.SetOperatorRatio(0, 1.0)
 	fm.SetOperatorEnvelope(0, 0.002, 0.6, 0.3, 0.5) // Longer, more musical
 	fm.SetOperatorLevel(0, 1.0)
-	
+
 	// Operator 2: Modulator - musical harmonic (not too inharmonic)
 	fm.SetOperatorRatio(1, 3.5) // Lower ratio for warmth
 	fm.SetOperatorEnvelope(1, 0.001, 0.4, 0.2, 0.4)
 	fm.SetOperatorLevel(1, 0.7) // Reduced for less harshness
-	
+
 	fm.SetModulationIndex(2.0) // Lower for warmth
-	
+
 	return fm
 }
 
 // NewFMArpFMInstrument creates a fast arpeggio/chiptune preset
 func NewFMArpFMInstrument(sampleRate float64) *FMInstrument {
 	fm := NewFMInstrument(2, FM2OpSimple, sampleRate)
-	
+
 	// Operator 1: Carrier
 	fm.SetOperatorRatio(0, 1.0)
 	fm.SetOperatorEnvelope(0, 0.001, 0.05, 0.3, 0.05)
 	fm.SetOperatorLevel(0, 1.0)
-	
+
 	// Operator 2: Modulator - chippy harmonics
 	fm.SetOperatorRatio(1, 2.0)
 	fm.SetOperatorEnvelope(1, 0.001, 0.03, 0.1, 0.03)
 	fm.SetOperatorLevel(1, 0.85)
-	
+
 	fm.SetModulationIndex(2.5) // Medium-high for chip sound
-	
+
 	return fm
 }
-

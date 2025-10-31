@@ -10,20 +10,21 @@ import (
 	"time"
 
 	"github.com/cjbrigato/go-vtm"
+	"github.com/cjbrigato/go-vtm/audio"
+	"github.com/cjbrigato/go-vtm/tracker"
 )
 
 func main() {
 	musicFile := flag.String("music", "music/raster-madness.vtm", "Path to VTM music file")
+	wavOutput := flag.String("wav", "", "Output to WAV file instead of playing (e.g., output.wav)")
 	flag.Parse()
 
-	// Load the music module
-	player, err := vtm.NewVTMPlayer(*musicFile, vtm.DefaultSampleRate)
+	// Load the module
+	module, err := tracker.LoadVTM(*musicFile)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error loading music: %v\n", err)
 		os.Exit(1)
 	}
-
-	module := player.Module()
 
 	// Display module information
 	fmt.Printf("\n🎵 %s\n", module.Title)
@@ -57,6 +58,29 @@ func main() {
 
 	fmt.Printf("\n⏱️  Duration:  ~%d:%02d\n", minutes, seconds)
 	fmt.Printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
+
+	// Check if we should output to WAV instead of playing
+	if *wavOutput != "" {
+		fmt.Printf("\n💾 Rendering to WAV file: %s\n", *wavOutput)
+		
+		startTime := time.Now()
+		err := audio.RenderToWAV(module, vtm.DefaultSampleRate, *wavOutput)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error rendering WAV: %v\n", err)
+			os.Exit(1)
+		}
+		
+		elapsed := time.Since(startTime)
+		fmt.Printf("✅ WAV file created successfully in %.2f seconds\n", elapsed.Seconds())
+		return
+	}
+
+	// Create player for real-time playback
+	player, err := vtm.NewVTMPlayer(*musicFile, vtm.DefaultSampleRate)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error creating player: %v\n", err)
+		os.Exit(1)
+	}
 
 	// Load and start music if specified
 	player.Play()
